@@ -6,7 +6,7 @@ import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
 import io.github.e_vent.repo.EventPostRepo
 
-class MyViewModel(private val repository: EventPostRepo) : ViewModel() {
+class EventViewModel(private val repository: EventPostRepo) : ViewModel() {
     private val dummy = MutableLiveData<Void>()
     private val repoResult = map(dummy) {
         repository.posts(30)

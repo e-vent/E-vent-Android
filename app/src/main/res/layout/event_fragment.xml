@@ -7,10 +7,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/root"
-    tools:context="io.github.e_vent.ui.EventActivity">
+    tools:context="io.github.e_vent.ui.EventFragment">
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipe_refresh"
-                                                  android:layout_width="match_parent"
-                                                  android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list"
             android:layout_width="match_parent"

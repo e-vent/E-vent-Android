@@ -1,5 +1,6 @@
 package io.github.e_vent
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.github.e_vent.ui.EventActivity
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun show() {
-        val intent = EventActivity.intentFor(this)
+        val intent = Intent(this, EventActivity::class.java)
         startActivity(intent)
     }
 }
