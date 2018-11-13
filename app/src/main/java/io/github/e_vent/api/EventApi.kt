@@ -13,6 +13,7 @@ data class ListingResponse(val data: List<ClientEvent>)
 
 private class ResponseLogic(
         val callID: Int,
+        val after: Int,
         val cb: CallbackLite<ListingResponse>,
         val calls: Array<Pair<Int, Call<ServerEvent>>?>,
         val buf: Array<ClientEvent?>,
@@ -66,12 +67,12 @@ private class ResponseLogic(
          * responses trickle in until the failed one cancels them by setting donePtr.
          * The last one returns that (smaller than usual).
          */
-        Log.i("EventApi", "ResponseLogic.onResponse: " + callID)
+        Log.i("EventApi", "ResponseLogic.onResponse: " + callID + " after " + after)
         if (response.isSuccessful) {
             if (!donePtr[0]) {
                 synchronized(donePtr) {
                     if (!donePtr[0]) {
-                        buf[callID] = response.body()!!.toClientEvent(callID)
+                        buf[callID] = response.body()!!.toClientEvent(callID + after)
                         calls[callID] = null
                         for (call in calls) {
                             if (call != null) {
@@ -116,7 +117,8 @@ fun doGetEvents(api: EventRetrofitApi, cb: CallbackLite<ListingResponse>, after:
                     val buf: Array<ClientEvent?> = arrayOfNulls(quantity)
                     val donePtr = booleanArrayOf(false)
                     for (call in calls) {
-                        call.second.enqueue(ResponseLogic(call.first, cb, callsBuf, buf, donePtr))
+                        call.second.enqueue(
+                                ResponseLogic(call.first, after, cb, callsBuf, buf, donePtr))
                     }
                 }
             }

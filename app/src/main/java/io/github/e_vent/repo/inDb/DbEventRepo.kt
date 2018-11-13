@@ -1,5 +1,6 @@
 package io.github.e_vent.repo.inDb
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -32,6 +33,10 @@ class DbEventRepo(
     private fun insertResultIntoDb(body: ListingResponse?) {
         body!!.data.let { posts ->
             db.runInTransaction {
+                Log.i("EventRepo", "About to insert items into DB")
+                for (post in posts) {
+                    Log.i("EventRepo", "* " + post)
+                }
                 db.posts().insert(posts)
             }
         }
@@ -48,6 +53,7 @@ class DbEventRepo(
     private fun refresh(): LiveData<NetworkState> {
         val networkState = MutableLiveData<NetworkState>()
         networkState.value = NetworkState.LOADING
+        Log.i("EventRepo", "Getting events because of refresh")
         doGetEvents(eventApi,
                 object : CallbackLite<ListingResponse> {
                     override fun onFailure(t: Throwable) {

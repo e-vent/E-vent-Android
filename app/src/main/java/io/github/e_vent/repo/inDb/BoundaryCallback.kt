@@ -1,5 +1,6 @@
 package io.github.e_vent.repo.inDb
 
+import android.util.Log
 import androidx.paging.PagedList
 import androidx.paging.PagingRequestHelper
 import androidx.annotation.MainThread
@@ -31,6 +32,7 @@ class BoundaryCallback(
     @MainThread
     override fun onZeroItemsLoaded() {
         helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
+            Log.i("EventRepo", "Getting events because of empty database")
             doGetEvents(webservice, createWebserviceCallback(it))
         }
     }
@@ -41,6 +43,7 @@ class BoundaryCallback(
     @MainThread
     override fun onItemAtEndLoaded(itemAtEnd: ClientEvent) {
         helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
+            Log.i("EventRepo", "Getting events because end of list was reached")
             doGetEvents(webservice, createWebserviceCallback(it), after = itemAtEnd.id + 1)
         }
     }
