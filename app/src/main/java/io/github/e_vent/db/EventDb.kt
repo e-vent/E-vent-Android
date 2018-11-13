@@ -16,13 +16,8 @@ import io.github.e_vent.vo.ClientEvent
 )
 abstract class EventDb : RoomDatabase() {
     companion object {
-        fun create(context: Context, useInMemory : Boolean): EventDb {
-            val databaseBuilder = if(useInMemory) {
-                Room.inMemoryDatabaseBuilder(context, EventDb::class.java)
-            } else {
-                Room.databaseBuilder(context, EventDb::class.java, "events.db")
-            }
-            return databaseBuilder
+        fun create(context: Context): EventDb {
+            return Room.databaseBuilder(context, EventDb::class.java, "events.db")
                     .fallbackToDestructiveMigration()
                     .build()
         }

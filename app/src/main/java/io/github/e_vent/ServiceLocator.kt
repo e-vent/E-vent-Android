@@ -21,8 +21,7 @@ interface ServiceLocator {
             synchronized(LOCK) {
                 if (instance == null) {
                     instance = DefaultServiceLocator(
-                            app = context.applicationContext as Application,
-                            useInMemoryDb = false)
+                            app = context.applicationContext as Application)
                 }
                 return instance!!
             }
@@ -41,7 +40,7 @@ interface ServiceLocator {
 /**
  * default implementation of ServiceLocator that uses production endpoints.
  */
-open class DefaultServiceLocator(val app: Application, val useInMemoryDb: Boolean) : ServiceLocator {
+open class DefaultServiceLocator(val app: Application) : ServiceLocator {
     // thread pool used for disk access
     @Suppress("PrivatePropertyName")
     private val DISK_IO = Executors.newSingleThreadExecutor()
@@ -51,7 +50,7 @@ open class DefaultServiceLocator(val app: Application, val useInMemoryDb: Boolea
     private val NETWORK_IO = Executors.newFixedThreadPool(5)
 
     private val db by lazy {
-        EventDb.create(app, useInMemoryDb)
+        EventDb.create(app)
     }
 
     private val api by lazy {
