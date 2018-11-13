@@ -1,0 +1,5 @@
+Based on template: https://github.com/googlesamples/android-architecture-components/tree/master/PagingWithNetworkSample
+Relevant parts Apache2.
+
+Modifications are All Rights Reserved to fullest extent permitted by law and the original template's license.
+
