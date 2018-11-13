@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.paging.PagedList
 import androidx.paging.PagingRequestHelper
 import androidx.annotation.MainThread
+import io.github.e_vent.ServiceLocator
 import io.github.e_vent.api.*
 import io.github.e_vent.util.createStatusLiveData
 import io.github.e_vent.vo.ClientEvent
@@ -18,7 +19,7 @@ import java.util.concurrent.Executor
  * rate limiting using the PagingRequestHelper class.
  */
 class BoundaryCallback(
-        private val webservice: EventRetrofitApi,
+        private val serviceLocator: ServiceLocator,
         private val handleResponse: (ListingResponse?) -> Unit,
         private val ioExecutor: Executor)
     : PagedList.BoundaryCallback<ClientEvent>() {
@@ -33,7 +34,7 @@ class BoundaryCallback(
     override fun onZeroItemsLoaded() {
         helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
             Log.i("EventRepo", "Getting events because of empty database")
-            doGetEvents(webservice, createWebserviceCallback(it))
+            doGetEvents(serviceLocator.getEventApi(), createWebserviceCallback(it))
         }
     }
 
@@ -44,7 +45,8 @@ class BoundaryCallback(
     override fun onItemAtEndLoaded(itemAtEnd: ClientEvent) {
         helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
             Log.i("EventRepo", "Getting events because end of list was reached")
-            doGetEvents(webservice, createWebserviceCallback(it), after = itemAtEnd.id + 1)
+            doGetEvents(serviceLocator.getEventApi(),
+                    createWebserviceCallback(it), after = itemAtEnd.id + 1)
         }
     }
 

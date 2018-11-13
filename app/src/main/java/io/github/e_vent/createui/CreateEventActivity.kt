@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.View
 import io.github.e_vent.R
 import io.github.e_vent.ServiceLocator
-import io.github.e_vent.api.EventRetrofitApi
 import io.github.e_vent.util.isValidEventStr
 import io.github.e_vent.vo.ServerEvent
 
@@ -25,12 +24,12 @@ class CreateEventActivity : AppCompatActivity() {
      */
     private var mPostTask: EventCreateTask? = null
 
-    private lateinit var api: EventRetrofitApi
+    private lateinit var serviceLocator: ServiceLocator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_event)
-        api = ServiceLocator.instance(this).getEventApi()
+        serviceLocator = ServiceLocator.instance(this)
         // Set up the login form.
         create_event_button.setOnClickListener { attemptCreate() }
     }
@@ -140,7 +139,8 @@ class CreateEventActivity : AppCompatActivity() {
             }
 
             try {
-                val result = api.create(ServerEvent(nameStr, descStr, "tabaret")).execute()
+                val result = serviceLocator.getEventApi()
+                        .create(ServerEvent(nameStr, descStr, "tabaret")).execute()
                 if (result.isSuccessful) {
                     return result.body()!!
                 } else {

@@ -60,7 +60,7 @@ open class DefaultServiceLocator(val app: Application) : ServiceLocator {
     override fun getRepository(): EventPostRepo {
         return DbEventRepo(
                 db = db,
-                eventApi = getEventApi(),
+                serviceLocator = this,
                 ioExecutor = getDiskIOExecutor())
     }
 

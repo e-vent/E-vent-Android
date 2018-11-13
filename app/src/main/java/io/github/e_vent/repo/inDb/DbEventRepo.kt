@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.annotation.MainThread
 import androidx.paging.toLiveData
+import io.github.e_vent.ServiceLocator
 import io.github.e_vent.api.CallbackLite
-import io.github.e_vent.api.EventRetrofitApi
 import io.github.e_vent.api.ListingResponse
 import io.github.e_vent.api.doGetEvents
 import io.github.e_vent.db.EventDb
@@ -24,7 +24,7 @@ import java.util.concurrent.Executor
  */
 class DbEventRepo(
         val db: EventDb,
-        private val eventApi: EventRetrofitApi,
+        private val serviceLocator: ServiceLocator,
         private val ioExecutor: Executor) : EventPostRepo {
 
     /**
@@ -54,7 +54,7 @@ class DbEventRepo(
         val networkState = MutableLiveData<NetworkState>()
         networkState.value = NetworkState.LOADING
         Log.i("EventRepo", "Getting events because of refresh")
-        doGetEvents(eventApi,
+        doGetEvents(serviceLocator.getEventApi(),
                 object : CallbackLite<ListingResponse> {
                     override fun onFailure(t: Throwable) {
                         // retrofit calls this on main thread so safe to call set value
@@ -85,7 +85,7 @@ class DbEventRepo(
         // create a boundary callback which will observe when the user reaches to the edges of
         // the list and update the database with extra data.
         val boundaryCallback = BoundaryCallback(
-                webservice = eventApi,
+                serviceLocator = serviceLocator,
                 handleResponse = this::insertResultIntoDb,
                 ioExecutor = ioExecutor)
         // we are using a mutable live data to trigger refresh requests which eventually calls
