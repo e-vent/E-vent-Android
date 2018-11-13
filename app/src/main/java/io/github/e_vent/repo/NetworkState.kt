@@ -14,26 +14,21 @@
  * limitations under the License.
  */
 
-package io.github.e_vent.db
+package io.github.e_vent.repo
 
-import androidx.paging.DataSource
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import io.github.e_vent.vo.RedditPost
+enum class Status {
+    RUNNING,
+    SUCCESS,
+    FAILED
+}
 
-@Dao
-interface RedditPostDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(posts : List<RedditPost>)
-
-    @Query("SELECT * FROM posts ORDER BY indexInResponse ASC")
-    fun posts() : DataSource.Factory<Int, RedditPost>
-
-    @Query("DELETE FROM posts")
-    fun delete()
-
-    @Query("SELECT MAX(indexInResponse) + 1 FROM posts")
-    fun getNextIndex() : Int
+@Suppress("DataClassPrivateConstructor")
+data class NetworkState private constructor(
+        val status: Status,
+        val msg: String? = null) {
+    companion object {
+        val LOADED = NetworkState(Status.SUCCESS)
+        val LOADING = NetworkState(Status.RUNNING)
+        fun error(msg: String?) = NetworkState(Status.FAILED, msg)
+    }
 }

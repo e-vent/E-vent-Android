@@ -24,9 +24,9 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import io.github.e_vent.R
-import io.github.e_vent.repository.NetworkState
-import io.github.e_vent.repository.Status.FAILED
-import io.github.e_vent.repository.Status.RUNNING
+import io.github.e_vent.repo.NetworkState
+import io.github.e_vent.repo.Status.FAILED
+import io.github.e_vent.repo.Status.RUNNING
 
 /**
  * A View Holder that can display a loading or have click action.

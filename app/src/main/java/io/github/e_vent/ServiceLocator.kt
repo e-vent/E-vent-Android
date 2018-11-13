@@ -19,9 +19,9 @@ package io.github.e_vent
 import android.app.Application
 import android.content.Context
 import io.github.e_vent.api.RedditApi
-import io.github.e_vent.db.RedditDb
-import io.github.e_vent.repository.RedditPostRepository
-import io.github.e_vent.repository.inDb.DbRedditPostRepository
+import io.github.e_vent.db.EventDb
+import io.github.e_vent.repo.EventPostRepo
+import io.github.e_vent.repo.inDb.DbRedditPostRepository
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -45,7 +45,7 @@ interface ServiceLocator {
         }
     }
 
-    fun getRepository(): RedditPostRepository
+    fun getRepository(): EventPostRepo
 
     fun getNetworkExecutor(): Executor
 
@@ -67,14 +67,14 @@ open class DefaultServiceLocator(val app: Application, val useInMemoryDb: Boolea
     private val NETWORK_IO = Executors.newFixedThreadPool(5)
 
     private val db by lazy {
-        RedditDb.create(app, useInMemoryDb)
+        EventDb.create(app, useInMemoryDb)
     }
 
     private val api by lazy {
         RedditApi.create()
     }
 
-    override fun getRepository(): RedditPostRepository {
+    override fun getRepository(): EventPostRepo {
         return DbRedditPostRepository(
                 db = db,
                 redditApi = getRedditApi(),

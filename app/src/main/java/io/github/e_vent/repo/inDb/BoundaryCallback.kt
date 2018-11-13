@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package io.github.e_vent.repository.inDb
+package io.github.e_vent.repo.inDb
 
 import androidx.paging.PagedList
 import androidx.paging.PagingRequestHelper
 import androidx.annotation.MainThread
 import io.github.e_vent.api.RedditApi
 import io.github.e_vent.util.createStatusLiveData
-import io.github.e_vent.vo.RedditPost
+import io.github.e_vent.vo.Event
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,7 +39,7 @@ class BoundaryCallback(
         private val handleResponse: (RedditApi.ListingResponse?) -> Unit,
         private val ioExecutor: Executor,
         private val networkPageSize: Int)
-    : PagedList.BoundaryCallback<RedditPost>() {
+    : PagedList.BoundaryCallback<Event>() {
 
     val helper = PagingRequestHelper(ioExecutor)
     val networkState = helper.createStatusLiveData()
@@ -60,7 +60,7 @@ class BoundaryCallback(
      * User reached to the end of the list.
      */
     @MainThread
-    override fun onItemAtEndLoaded(itemAtEnd: RedditPost) {
+    override fun onItemAtEndLoaded(itemAtEnd: Event) {
         helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
             webservice.getTopAfter(
                     after = itemAtEnd.name,
@@ -82,7 +82,7 @@ class BoundaryCallback(
         }
     }
 
-    override fun onItemAtFrontLoaded(itemAtFront: RedditPost) {
+    override fun onItemAtFrontLoaded(itemAtFront: Event) {
         // ignored, since we only ever append to what's in the DB
     }
 

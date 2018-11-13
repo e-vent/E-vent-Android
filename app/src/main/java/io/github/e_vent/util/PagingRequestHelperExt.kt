@@ -3,7 +3,7 @@ package io.github.e_vent.util
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingRequestHelper
-import io.github.e_vent.repository.NetworkState
+import io.github.e_vent.repo.NetworkState
 
 private fun getErrorMessage(report: PagingRequestHelper.StatusReport): String {
     return PagingRequestHelper.RequestType.values().mapNotNull {

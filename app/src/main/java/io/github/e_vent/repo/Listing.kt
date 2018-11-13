@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.e_vent.repository
+package io.github.e_vent.repo
 
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList

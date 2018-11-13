@@ -20,9 +20,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
-import io.github.e_vent.repository.RedditPostRepository
+import io.github.e_vent.repo.EventPostRepo
 
-class MyViewModel(private val repository: RedditPostRepository) : ViewModel() {
+class MyViewModel(private val repository: EventPostRepo) : ViewModel() {
     private val dummy = MutableLiveData<Void>()
     private val repoResult = map(dummy) {
         repository.posts(30)

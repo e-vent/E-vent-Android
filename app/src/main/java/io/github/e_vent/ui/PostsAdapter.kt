@@ -21,19 +21,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import io.github.e_vent.R
-import io.github.e_vent.repository.NetworkState
-import io.github.e_vent.vo.RedditPost
+import io.github.e_vent.repo.NetworkState
+import io.github.e_vent.vo.Event
 
 /**
  * A simple adapter implementation that shows Reddit posts.
  */
 class PostsAdapter(
         private val retryCallback: () -> Unit)
-    : PagedListAdapter<RedditPost, RecyclerView.ViewHolder>(POST_COMPARATOR) {
+    : PagedListAdapter<Event, RecyclerView.ViewHolder>(POST_COMPARATOR) {
     private var networkState: NetworkState? = null
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
-            R.layout.reddit_post_item -> (holder as RedditPostViewHolder).bind(getItem(position))
+            R.layout.event_item -> (holder as EventViewHolder).bind(getItem(position))
             R.layout.network_state_item -> (holder as NetworkStateItemViewHolder).bindTo(
                     networkState)
         }
@@ -45,7 +45,7 @@ class PostsAdapter(
             payloads: MutableList<Any>) {
         if (payloads.isNotEmpty()) {
             val item = getItem(position)
-            (holder as RedditPostViewHolder).updateScore(item)
+            (holder as EventViewHolder).updateScore(item)
         } else {
             onBindViewHolder(holder, position)
         }
@@ -53,7 +53,7 @@ class PostsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.reddit_post_item -> RedditPostViewHolder.create(parent)
+            R.layout.event_item -> EventViewHolder.create(parent)
             R.layout.network_state_item -> NetworkStateItemViewHolder.create(parent, retryCallback)
             else -> throw IllegalArgumentException("unknown view type $viewType")
         }
@@ -65,7 +65,7 @@ class PostsAdapter(
         return if (hasExtraRow() && position == itemCount - 1) {
             R.layout.network_state_item
         } else {
-            R.layout.reddit_post_item
+            R.layout.event_item
         }
     }
 
@@ -91,14 +91,14 @@ class PostsAdapter(
 
     companion object {
         private val PAYLOAD_SCORE = Any()
-        val POST_COMPARATOR = object : DiffUtil.ItemCallback<RedditPost>() {
-            override fun areContentsTheSame(oldItem: RedditPost, newItem: RedditPost): Boolean =
+        val POST_COMPARATOR = object : DiffUtil.ItemCallback<Event>() {
+            override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean =
                     oldItem == newItem
 
-            override fun areItemsTheSame(oldItem: RedditPost, newItem: RedditPost): Boolean =
+            override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean =
                     oldItem.name == newItem.name
 
-            override fun getChangePayload(oldItem: RedditPost, newItem: RedditPost): Any? {
+            override fun getChangePayload(oldItem: Event, newItem: Event): Any? {
                 return if (sameExceptScore(oldItem, newItem)) {
                     PAYLOAD_SCORE
                 } else {
@@ -107,7 +107,7 @@ class PostsAdapter(
             }
         }
 
-        private fun sameExceptScore(oldItem: RedditPost, newItem: RedditPost): Boolean {
+        private fun sameExceptScore(oldItem: Event, newItem: Event): Boolean {
             // DON'T do this copy in a real app, it is just convenient here for the demo :)
             // because reddit randomizes scores, we want to pass it as a payload to minimize
             // UI updates between refreshes

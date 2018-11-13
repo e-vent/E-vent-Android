@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package io.github.e_vent.repository
+package io.github.e_vent.repo
 
-enum class Status {
-    RUNNING,
-    SUCCESS,
-    FAILED
-}
+import io.github.e_vent.vo.Event
 
-@Suppress("DataClassPrivateConstructor")
-data class NetworkState private constructor(
-        val status: Status,
-        val msg: String? = null) {
-    companion object {
-        val LOADED = NetworkState(Status.SUCCESS)
-        val LOADING = NetworkState(Status.RUNNING)
-        fun error(msg: String?) = NetworkState(Status.FAILED, msg)
-    }
+/**
+ * Common interface shared by the different repository implementations.
+ * Note: this only exists for sample purposes - typically an app would implement a repo once, either
+ * network+db, or network-only
+ */
+interface EventPostRepo {
+    fun posts(pageSize: Int): Listing<Event>
 }

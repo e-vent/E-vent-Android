@@ -21,7 +21,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "posts")
-data class RedditPost(
+data class Event(
         @PrimaryKey
         @SerializedName("name")
         val name: String,

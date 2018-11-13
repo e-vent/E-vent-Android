@@ -17,7 +17,7 @@
 package io.github.e_vent.api
 
 import android.util.Log
-import io.github.e_vent.vo.RedditPost
+import io.github.e_vent.vo.Event
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -25,7 +25,6 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -49,7 +48,7 @@ interface RedditApi {
             val children: List<RedditChildrenResponse>
     )
 
-    data class RedditChildrenResponse(val data: RedditPost)
+    data class RedditChildrenResponse(val data: Event)
 
     companion object {
         private const val BASE_URL = "https://www.reddit.com/"

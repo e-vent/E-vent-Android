@@ -23,7 +23,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/root"
-    tools:context="io.github.e_vent.ui.RedditActivity">
+    tools:context="io.github.e_vent.ui.EventActivity">
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipe_refresh"
                                                   android:layout_width="match_parent"
                                                   android:layout_height="match_parent">

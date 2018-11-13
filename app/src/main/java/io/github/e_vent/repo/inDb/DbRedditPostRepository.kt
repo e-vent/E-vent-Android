@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.e_vent.repository.inDb
+package io.github.e_vent.repo.inDb
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,11 +22,11 @@ import androidx.lifecycle.Transformations
 import androidx.annotation.MainThread
 import androidx.paging.toLiveData
 import io.github.e_vent.api.RedditApi
-import io.github.e_vent.db.RedditDb
-import io.github.e_vent.repository.Listing
-import io.github.e_vent.repository.NetworkState
-import io.github.e_vent.repository.RedditPostRepository
-import io.github.e_vent.vo.RedditPost
+import io.github.e_vent.db.EventDb
+import io.github.e_vent.repo.Listing
+import io.github.e_vent.repo.NetworkState
+import io.github.e_vent.repo.EventPostRepo
+import io.github.e_vent.vo.Event
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,10 +37,10 @@ import java.util.concurrent.Executor
  * listing that loads in pages.
  */
 class DbRedditPostRepository(
-        val db: RedditDb,
+        val db: EventDb,
         private val redditApi: RedditApi,
         private val ioExecutor: Executor,
-        private val networkPageSize: Int = DEFAULT_NETWORK_PAGE_SIZE) : RedditPostRepository {
+        private val networkPageSize: Int = DEFAULT_NETWORK_PAGE_SIZE) : EventPostRepo {
     companion object {
         private const val DEFAULT_NETWORK_PAGE_SIZE = 10
     }
@@ -100,7 +100,7 @@ class DbRedditPostRepository(
      * Returns a Listing for the given subreddit.
      */
     @MainThread
-    override fun posts(pageSize: Int): Listing<RedditPost> {
+    override fun posts(pageSize: Int): Listing<Event> {
         // create a boundary callback which will observe when the user reaches to the edges of
         // the list and update the database with extra data.
         val boundaryCallback = BoundaryCallback(

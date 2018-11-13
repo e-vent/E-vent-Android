@@ -27,19 +27,19 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.github.e_vent.R
 import io.github.e_vent.ServiceLocator
-import io.github.e_vent.repository.NetworkState
-import io.github.e_vent.vo.RedditPost
-import kotlinx.android.synthetic.main.activity_reddit.*
+import io.github.e_vent.repo.NetworkState
+import io.github.e_vent.vo.Event
+import kotlinx.android.synthetic.main.activity_event.*
 
 /**
  * A list activity that shows reddit posts in the given sub-reddit.
  * <p>
  * The intent arguments can be modified to make it use a different repository (see MainActivity).
  */
-class RedditActivity : AppCompatActivity() {
+class EventActivity : AppCompatActivity() {
     companion object {
         fun intentFor(context: Context): Intent {
-            val intent = Intent(context, RedditActivity::class.java)
+            val intent = Intent(context, EventActivity::class.java)
             return intent
         }
     }
@@ -48,7 +48,7 @@ class RedditActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_reddit)
+        setContentView(R.layout.activity_event)
         model = getViewModel()
         initAdapter()
         initSwipeToRefresh()
@@ -58,7 +58,7 @@ class RedditActivity : AppCompatActivity() {
     private fun getViewModel(): MyViewModel {
         return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                val repo = ServiceLocator.instance(this@RedditActivity)
+                val repo = ServiceLocator.instance(this@EventActivity)
                         .getRepository()
                 @Suppress("UNCHECKED_CAST")
                 return MyViewModel(repo) as T
@@ -71,7 +71,7 @@ class RedditActivity : AppCompatActivity() {
             model.retry()
         }
         list.adapter = adapter
-        model.posts.observe(this, Observer<PagedList<RedditPost>> {
+        model.posts.observe(this, Observer<PagedList<Event>> {
             adapter.submitList(it)
         })
         model.networkState.observe(this, Observer {

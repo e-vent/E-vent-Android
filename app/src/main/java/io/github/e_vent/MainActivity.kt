@@ -18,7 +18,7 @@ package io.github.e_vent
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import io.github.e_vent.ui.RedditActivity
+import io.github.e_vent.ui.EventActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun show() {
-        val intent = RedditActivity.intentFor(this)
+        val intent = EventActivity.intentFor(this)
         startActivity(intent)
     }
 }
