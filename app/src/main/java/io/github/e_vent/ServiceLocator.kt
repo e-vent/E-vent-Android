@@ -35,12 +35,14 @@ interface ServiceLocator {
     fun getDiskIOExecutor(): Executor
 
     fun getEventApi(): EventRetrofitApi
+
+    fun refreshEventApi()
 }
 
 /**
  * default implementation of ServiceLocator that uses production endpoints.
  */
-open class DefaultServiceLocator(val app: Application) : ServiceLocator {
+class DefaultServiceLocator(val app: Application) : ServiceLocator {
     // thread pool used for disk access
     @Suppress("PrivatePropertyName")
     private val DISK_IO = Executors.newSingleThreadExecutor()
@@ -53,8 +55,10 @@ open class DefaultServiceLocator(val app: Application) : ServiceLocator {
         EventDb.create(app)
     }
 
-    private val api by lazy {
-        EventRetrofitApi.create()
+    private lateinit var api: EventRetrofitApi
+
+    init {
+        refreshEventApi()
     }
 
     override fun getRepository(): EventPostRepo {
@@ -69,4 +73,8 @@ open class DefaultServiceLocator(val app: Application) : ServiceLocator {
     override fun getDiskIOExecutor(): Executor = DISK_IO
 
     override fun getEventApi(): EventRetrofitApi = api
+
+    override fun refreshEventApi() {
+        EventRetrofitApi.create("http://192.168.3.150:8000")
+    }
 }

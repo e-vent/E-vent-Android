@@ -26,7 +26,7 @@ interface EventRetrofitApi {
     fun create(@Body event: ServerEvent): Call<Int>
 
     companion object {
-        fun create(): EventRetrofitApi {
+        fun create(url: String): EventRetrofitApi {
             val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
                 Log.d("API", it)
             })
@@ -36,7 +36,7 @@ interface EventRetrofitApi {
                     .addInterceptor(logger)
                     .build()
             return Retrofit.Builder()
-                    .baseUrl("http://192.168.3.150:8000")
+                    .baseUrl(url)
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
