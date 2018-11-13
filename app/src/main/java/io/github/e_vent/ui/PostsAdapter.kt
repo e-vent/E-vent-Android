@@ -20,7 +20,6 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
-import io.github.e_vent.GlideRequests
 import io.github.e_vent.R
 import io.github.e_vent.repository.NetworkState
 import io.github.e_vent.vo.RedditPost
@@ -29,7 +28,6 @@ import io.github.e_vent.vo.RedditPost
  * A simple adapter implementation that shows Reddit posts.
  */
 class PostsAdapter(
-        private val glide: GlideRequests,
         private val retryCallback: () -> Unit)
     : PagedListAdapter<RedditPost, RecyclerView.ViewHolder>(POST_COMPARATOR) {
     private var networkState: NetworkState? = null
@@ -55,7 +53,7 @@ class PostsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.reddit_post_item -> RedditPostViewHolder.create(parent, glide)
+            R.layout.reddit_post_item -> RedditPostViewHolder.create(parent)
             R.layout.network_state_item -> NetworkStateItemViewHolder.create(parent, retryCallback)
             else -> throw IllegalArgumentException("unknown view type $viewType")
         }

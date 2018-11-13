@@ -22,21 +22,18 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import io.github.e_vent.GlideRequests
 import io.github.e_vent.R
 import io.github.e_vent.vo.RedditPost
 
 /**
  * A RecyclerView ViewHolder that displays a reddit post.
  */
-class RedditPostViewHolder(view: View, private val glide: GlideRequests)
+class RedditPostViewHolder(view: View)
     : RecyclerView.ViewHolder(view) {
     private val title: TextView = view.findViewById(R.id.title)
     private val subtitle: TextView = view.findViewById(R.id.subtitle)
     private val score: TextView = view.findViewById(R.id.score)
-    private val thumbnail : ImageView = view.findViewById(R.id.thumbnail)
     private var post : RedditPost? = null
     init {
         view.setOnClickListener {
@@ -53,22 +50,13 @@ class RedditPostViewHolder(view: View, private val glide: GlideRequests)
         subtitle.text = itemView.context.resources.getString(R.string.post_subtitle,
                 post?.author ?: "unknown")
         score.text = "${post?.score ?: 0}"
-        if (post?.thumbnail?.startsWith("http") == true) {
-            thumbnail.visibility = View.VISIBLE
-            glide.load(post.thumbnail)
-                    .centerCrop()
-                    .into(thumbnail)
-        } else {
-            thumbnail.visibility = View.GONE
-            glide.clear(thumbnail)
-        }
     }
 
     companion object {
-        fun create(parent: ViewGroup, glide: GlideRequests): RedditPostViewHolder {
+        fun create(parent: ViewGroup): RedditPostViewHolder {
             val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.reddit_post_item, parent, false)
-            return RedditPostViewHolder(view, glide)
+            return RedditPostViewHolder(view)
         }
     }
 

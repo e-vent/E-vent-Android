@@ -44,7 +44,6 @@ android {
 
 dependencies {
     kapt deps.room.compiler
-    kapt deps.glide.compiler
 
     implementation deps.constraint_layout
     implementation deps.support.app_compat
@@ -59,5 +58,4 @@ dependencies {
     implementation deps.retrofit.runtime
     implementation deps.retrofit.gson
     implementation deps.okhttp_logging_interceptor
-    implementation deps.glide.runtime
 }

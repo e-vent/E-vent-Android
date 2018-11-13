@@ -27,7 +27,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
-import io.github.e_vent.GlideApp
 import io.github.e_vent.R
 import io.github.e_vent.ServiceLocator
 import io.github.e_vent.repository.NetworkState
@@ -79,8 +78,7 @@ class RedditActivity : AppCompatActivity() {
     }
 
     private fun initAdapter() {
-        val glide = GlideApp.with(this)
-        val adapter = PostsAdapter(glide) {
+        val adapter = PostsAdapter {
             model.retry()
         }
         list.adapter = adapter
