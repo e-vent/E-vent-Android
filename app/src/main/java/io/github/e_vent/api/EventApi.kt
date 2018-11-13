@@ -5,6 +5,9 @@ import io.github.e_vent.vo.ClientEvent
 import io.github.e_vent.vo.ServerEvent
 import retrofit2.Call
 import retrofit2.Response
+import kotlin.math.min
+
+const val MAX_PAGE_SIZE = 30
 
 data class ListingResponse(val data: List<ClientEvent>)
 
@@ -101,12 +104,11 @@ fun doGetEvents(api: EventRetrofitApi, cb: CallbackLite<ListingResponse>, after:
                 }
                 override fun onResponse(response: Response<Int>) {
                     val stop = response.body()!!
-                    val quantity = stop - after
+                    val quantity = min(stop - after, MAX_PAGE_SIZE)
                     if (quantity <= 0) {
                         cb.onFailure(Throwable("Tried to get more than available"))
                         return
                     }
-                    //TODO LIMIT
                     val calls = (0 until quantity).map {
                         Pair(it, api.getEvent(after + it))
                     }
