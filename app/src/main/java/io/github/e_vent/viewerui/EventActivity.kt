@@ -1,5 +1,6 @@
 package io.github.e_vent.viewerui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -9,6 +10,7 @@ import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import io.github.e_vent.R
+import io.github.e_vent.createui.CreateEventActivity
 import kotlinx.android.synthetic.main.event_activity.*
 
 class EventActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -26,8 +28,8 @@ class EventActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private fun onCreateDrawerActivity() {
         setSupportActionBar(toolbar)
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            val intent = Intent(this, CreateEventActivity::class.java)
+            startActivity(intent)
         }
         val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close)

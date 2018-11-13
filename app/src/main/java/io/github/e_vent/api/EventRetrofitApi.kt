@@ -7,7 +7,9 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 /**
@@ -19,6 +21,9 @@ interface EventRetrofitApi {
 
     @GET("/count")
     fun getCount(): Call<Int>
+
+    @POST("/events")
+    fun create(@Body event: ServerEvent): Call<Int>
 
     companion object {
         fun create(): EventRetrofitApi {
