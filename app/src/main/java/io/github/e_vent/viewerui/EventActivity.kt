@@ -11,6 +11,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import io.github.e_vent.R
 import io.github.e_vent.createui.CreateEventActivity
+import io.github.e_vent.prefsui.SettingsActivity
 import kotlinx.android.synthetic.main.event_activity.*
 
 class EventActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -57,7 +58,11 @@ class EventActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
-            R.id.action_settings -> return true
+            R.id.action_settings -> {
+                val intent = Intent(this, SettingsActivity::class.java)
+                startActivity(intent)
+                return true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
     }

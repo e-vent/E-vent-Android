@@ -75,6 +75,7 @@ class DefaultServiceLocator(val app: Application) : ServiceLocator {
     override fun getEventApi(): EventRetrofitApi = api
 
     override fun refreshEventApi() {
-        EventRetrofitApi.create("http://192.168.3.150:8000")
+        //TODO purge the db
+        api = EventRetrofitApi.create("http://192.168.3.150:8000")
     }
 }
