@@ -23,7 +23,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/root"
-    tools:context="com.android.example.paging.pagingwithnetwork.reddit.ui.RedditActivity">
+    tools:context="io.github.e_vent.ui.RedditActivity">
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/input_layout"
         android:layout_width="match_parent"
