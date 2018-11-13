@@ -57,7 +57,6 @@ class RedditPostViewHolder(view: View, private val glide: GlideRequests)
             thumbnail.visibility = View.VISIBLE
             glide.load(post.thumbnail)
                     .centerCrop()
-                    .placeholder(R.drawable.ic_insert_photo_black_48dp)
                     .into(thumbnail)
         } else {
             thumbnail.visibility = View.GONE
