@@ -8,7 +8,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import io.github.e_vent.R
 import io.github.e_vent.createui.CreateEventActivity
 import io.github.e_vent.prefsui.SettingsActivity

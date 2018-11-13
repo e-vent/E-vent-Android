@@ -13,7 +13,8 @@ import io.github.e_vent.vo.ClientEvent
  */
 class EventViewHolder(view: View)
     : RecyclerView.ViewHolder(view) {
-    private val title: TextView = view.findViewById(R.id.title)
+    private val eventName: TextView = view.findViewById(R.id.event_name)
+    private val eventDesc: TextView = view.findViewById(R.id.event_desc)
     private var post : ClientEvent? = null
     init {
 //        view.setOnClickListener {
@@ -22,7 +23,8 @@ class EventViewHolder(view: View)
 
     fun bind(post: ClientEvent?) {
         this.post = post
-        title.text = post?.name ?: "loading"
+        eventName.text = post?.name ?: "loading"
+        eventDesc.text = post?.desc ?: "..."
     }
 
     companion object {
