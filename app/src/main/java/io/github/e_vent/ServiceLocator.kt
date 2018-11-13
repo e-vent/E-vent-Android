@@ -18,13 +18,10 @@ package io.github.e_vent
 
 import android.app.Application
 import android.content.Context
-import androidx.annotation.VisibleForTesting
 import io.github.e_vent.api.RedditApi
 import io.github.e_vent.db.RedditDb
 import io.github.e_vent.repository.RedditPostRepository
 import io.github.e_vent.repository.inDb.DbRedditPostRepository
-import io.github.e_vent.repository.inMemory.byItem.InMemoryByItemRepository
-import io.github.e_vent.repository.inMemory.byPage.InMemoryByPageKeyRepository
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -46,17 +43,9 @@ interface ServiceLocator {
                 return instance!!
             }
         }
-
-        /**
-         * Allows tests to replace the default implementations.
-         */
-        @VisibleForTesting
-        fun swap(locator: ServiceLocator) {
-            instance = locator
-        }
     }
 
-    fun getRepository(type: RedditPostRepository.Type): RedditPostRepository
+    fun getRepository(): RedditPostRepository
 
     fun getNetworkExecutor(): Executor
 
@@ -85,19 +74,11 @@ open class DefaultServiceLocator(val app: Application, val useInMemoryDb: Boolea
         RedditApi.create()
     }
 
-    override fun getRepository(type: RedditPostRepository.Type): RedditPostRepository {
-        return when (type) {
-            RedditPostRepository.Type.IN_MEMORY_BY_ITEM -> InMemoryByItemRepository(
-                    redditApi = getRedditApi(),
-                    networkExecutor = getNetworkExecutor())
-            RedditPostRepository.Type.IN_MEMORY_BY_PAGE -> InMemoryByPageKeyRepository(
-                    redditApi = getRedditApi(),
-                    networkExecutor = getNetworkExecutor())
-            RedditPostRepository.Type.DB -> DbRedditPostRepository(
-                    db = db,
-                    redditApi = getRedditApi(),
-                    ioExecutor = getDiskIOExecutor())
-        }
+    override fun getRepository(): RedditPostRepository {
+        return DbRedditPostRepository(
+                db = db,
+                redditApi = getRedditApi(),
+                ioExecutor = getDiskIOExecutor())
     }
 
     override fun getNetworkExecutor(): Executor = NETWORK_IO

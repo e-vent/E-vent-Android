@@ -43,10 +43,8 @@ class RedditActivity : AppCompatActivity() {
     companion object {
         const val KEY_SUBREDDIT = "subreddit"
         const val DEFAULT_SUBREDDIT = "androiddev"
-        const val KEY_REPOSITORY_TYPE = "repository_type"
-        fun intentFor(context: Context, type: RedditPostRepository.Type): Intent {
+        fun intentFor(context: Context): Intent {
             val intent = Intent(context, RedditActivity::class.java)
-            intent.putExtra(KEY_REPOSITORY_TYPE, type.ordinal)
             return intent
         }
     }
@@ -67,10 +65,8 @@ class RedditActivity : AppCompatActivity() {
     private fun getViewModel(): SubRedditViewModel {
         return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                val repoTypeParam = intent.getIntExtra(KEY_REPOSITORY_TYPE, 0)
-                val repoType = RedditPostRepository.Type.values()[repoTypeParam]
                 val repo = ServiceLocator.instance(this@RedditActivity)
-                        .getRepository(repoType)
+                        .getRepository()
                 @Suppress("UNCHECKED_CAST")
                 return SubRedditViewModel(repo) as T
             }

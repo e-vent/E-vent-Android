@@ -31,18 +31,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         withDatabase.setOnClickListener {
-            show(RedditPostRepository.Type.DB)
-        }
-        networkOnly.setOnClickListener {
-            show(RedditPostRepository.Type.IN_MEMORY_BY_ITEM)
-        }
-        networkOnlyWithPageKeys.setOnClickListener {
-            show(RedditPostRepository.Type.IN_MEMORY_BY_PAGE)
+            show()
         }
     }
 
-    private fun show(type: RedditPostRepository.Type) {
-        val intent = RedditActivity.intentFor(this, type)
+    private fun show() {
+        val intent = RedditActivity.intentFor(this)
         startActivity(intent)
     }
 }

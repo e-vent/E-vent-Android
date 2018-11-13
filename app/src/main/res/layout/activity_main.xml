@@ -27,12 +27,4 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/db_plus_network"/>
-    <Button android:id="@+id/networkOnly"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/network_only_by_item"/>
-    <Button android:id="@+id/networkOnlyWithPageKeys"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/network_only_by_page"/>
 </LinearLayout>
