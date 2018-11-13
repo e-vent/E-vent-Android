@@ -42,7 +42,15 @@ private class ResponseLogic(
                     // All previous calls are done, will never care about the rest
                     teardown()
                     Log.i("EventApi", "Smaller successful response")
-                    cb.onResponse(Response.success(ListingResponse(buf.map { it!! })))
+                    val result: MutableList<ClientEvent> = mutableListOf<ClientEvent>()
+                    for (b in buf) {
+                        if (b != null) {
+                            result.add(b)
+                        } else {
+                            break
+                        }
+                    }
+                    cb.onResponse(Response.success(ListingResponse(result.toList())))
                 }
             }
         } else {
