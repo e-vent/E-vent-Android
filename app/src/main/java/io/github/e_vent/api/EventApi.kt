@@ -52,7 +52,7 @@ private class ResponseLogic(
     private fun teardown() {
         donePtr[0] = true
         for (otherCall in calls) {
-            otherCall!!.second.cancel()
+            otherCall?.second?.cancel()
         }
     }
     override fun onResponse(response: Response<ServerEvent>) {
