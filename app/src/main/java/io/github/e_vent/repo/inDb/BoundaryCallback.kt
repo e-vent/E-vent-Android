@@ -3,7 +3,7 @@ package io.github.e_vent.repo.inDb
 import androidx.paging.PagedList
 import androidx.paging.PagingRequestHelper
 import androidx.annotation.MainThread
-import io.github.e_vent.api.RedditApi
+import io.github.e_vent.api.EventApi
 import io.github.e_vent.util.createStatusLiveData
 import io.github.e_vent.vo.Event
 import retrofit2.Call
@@ -19,8 +19,8 @@ import java.util.concurrent.Executor
  * rate limiting using the PagingRequestHelper class.
  */
 class BoundaryCallback(
-        private val webservice: RedditApi,
-        private val handleResponse: (RedditApi.ListingResponse?) -> Unit,
+        private val webservice: EventApi,
+        private val handleResponse: (EventApi.ListingResponse?) -> Unit,
         private val ioExecutor: Executor,
         private val networkPageSize: Int)
     : PagedList.BoundaryCallback<Event>() {
@@ -58,7 +58,7 @@ class BoundaryCallback(
      * paging library takes care of refreshing the list if necessary.
      */
     private fun insertItemsIntoDb(
-            response: Response<RedditApi.ListingResponse>,
+            response: Response<EventApi.ListingResponse>,
             it: PagingRequestHelper.Request.Callback) {
         ioExecutor.execute {
             handleResponse(response.body())
@@ -71,17 +71,17 @@ class BoundaryCallback(
     }
 
     private fun createWebserviceCallback(it: PagingRequestHelper.Request.Callback)
-            : Callback<RedditApi.ListingResponse> {
-        return object : Callback<RedditApi.ListingResponse> {
+            : Callback<EventApi.ListingResponse> {
+        return object : Callback<EventApi.ListingResponse> {
             override fun onFailure(
-                    call: Call<RedditApi.ListingResponse>,
+                    call: Call<EventApi.ListingResponse>,
                     t: Throwable) {
                 it.recordFailure(t)
             }
 
             override fun onResponse(
-                    call: Call<RedditApi.ListingResponse>,
-                    response: Response<RedditApi.ListingResponse>) {
+                    call: Call<EventApi.ListingResponse>,
+                    response: Response<EventApi.ListingResponse>) {
                 insertItemsIntoDb(response, it)
             }
         }

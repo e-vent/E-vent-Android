@@ -2,10 +2,10 @@ package io.github.e_vent
 
 import android.app.Application
 import android.content.Context
-import io.github.e_vent.api.RedditApi
+import io.github.e_vent.api.EventApi
 import io.github.e_vent.db.EventDb
 import io.github.e_vent.repo.EventPostRepo
-import io.github.e_vent.repo.inDb.DbRedditPostRepository
+import io.github.e_vent.repo.inDb.DbEventRepo
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -35,7 +35,7 @@ interface ServiceLocator {
 
     fun getDiskIOExecutor(): Executor
 
-    fun getRedditApi(): RedditApi
+    fun getEventApi(): EventApi
 }
 
 /**
@@ -55,13 +55,13 @@ open class DefaultServiceLocator(val app: Application, val useInMemoryDb: Boolea
     }
 
     private val api by lazy {
-        RedditApi.create()
+        EventApi.create()
     }
 
     override fun getRepository(): EventPostRepo {
-        return DbRedditPostRepository(
+        return DbEventRepo(
                 db = db,
-                redditApi = getRedditApi(),
+                eventApi = getEventApi(),
                 ioExecutor = getDiskIOExecutor())
     }
 
@@ -69,5 +69,5 @@ open class DefaultServiceLocator(val app: Application, val useInMemoryDb: Boolea
 
     override fun getDiskIOExecutor(): Executor = DISK_IO
 
-    override fun getRedditApi(): RedditApi = api
+    override fun getEventApi(): EventApi = api
 }

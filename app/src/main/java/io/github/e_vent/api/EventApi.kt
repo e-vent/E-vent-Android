@@ -14,30 +14,24 @@ import retrofit2.http.Query
 /**
  * API communication setup
  */
-interface RedditApi {
+interface EventApi {
     @GET("/r/androiddev/hot.json")
     fun getTop(
             @Query("limit") limit: Int): Call<ListingResponse>
 
-    // for after/before param, either get from RedditDataResponse.after/before,
-    // or pass RedditNewsDataResponse.name (though this is technically incorrect)
     @GET("/r/androiddev/hot.json")
     fun getTopAfter(
             @Query("after") after: String,
             @Query("limit") limit: Int): Call<ListingResponse>
 
-    class ListingResponse(val data: ListingData)
+    class ListingResponse(val data: List<ChildrenResponse>)
 
-    class ListingData(
-            val children: List<RedditChildrenResponse>
-    )
-
-    data class RedditChildrenResponse(val data: Event)
+    data class ChildrenResponse(val data: Event)
 
     companion object {
         private const val BASE_URL = "https://www.reddit.com/"
-        fun create(): RedditApi = create(HttpUrl.parse(BASE_URL)!!)
-        fun create(httpUrl: HttpUrl): RedditApi {
+        fun create(): EventApi = create(HttpUrl.parse(BASE_URL)!!)
+        fun create(httpUrl: HttpUrl): EventApi {
             val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
                 Log.d("API", it)
             })
@@ -51,7 +45,7 @@ interface RedditApi {
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
-                    .create(RedditApi::class.java)
+                    .create(EventApi::class.java)
         }
     }
 }

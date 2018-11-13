@@ -11,7 +11,7 @@ import io.github.e_vent.R
 import io.github.e_vent.vo.Event
 
 /**
- * A RecyclerView ViewHolder that displays a reddit post.
+ * A RecyclerView ViewHolder that displays a post.
  */
 class EventViewHolder(view: View)
     : RecyclerView.ViewHolder(view) {

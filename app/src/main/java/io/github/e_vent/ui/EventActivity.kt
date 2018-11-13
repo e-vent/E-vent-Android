@@ -16,7 +16,7 @@ import io.github.e_vent.vo.Event
 import kotlinx.android.synthetic.main.activity_event.*
 
 /**
- * A list activity that shows reddit posts in the given sub-reddit.
+ * A list activity that shows posts.
  * <p>
  * The intent arguments can be modified to make it use a different repository (see MainActivity).
  */

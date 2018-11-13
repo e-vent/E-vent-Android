@@ -9,7 +9,7 @@ import io.github.e_vent.repo.NetworkState
 import io.github.e_vent.vo.Event
 
 /**
- * A simple adapter implementation that shows Reddit posts.
+ * A simple adapter implementation that shows posts.
  */
 class PostsAdapter(
         private val retryCallback: () -> Unit)
@@ -74,7 +74,6 @@ class PostsAdapter(
     }
 
     companion object {
-        private val PAYLOAD_SCORE = Any()
         val POST_COMPARATOR = object : DiffUtil.ItemCallback<Event>() {
             override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean =
                     oldItem == newItem
@@ -82,20 +81,7 @@ class PostsAdapter(
             override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean =
                     oldItem.name == newItem.name
 
-            override fun getChangePayload(oldItem: Event, newItem: Event): Any? {
-                return if (sameExceptScore(oldItem, newItem)) {
-                    PAYLOAD_SCORE
-                } else {
-                    null
-                }
-            }
-        }
-
-        private fun sameExceptScore(oldItem: Event, newItem: Event): Boolean {
-            // DON'T do this copy in a real app, it is just convenient here for the demo :)
-            // because reddit randomizes scores, we want to pass it as a payload to minimize
-            // UI updates between refreshes
-            return oldItem.copy(score = newItem.score) == newItem
+            override fun getChangePayload(oldItem: Event, newItem: Event): Any? = null
         }
     }
 }

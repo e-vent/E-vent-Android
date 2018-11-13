@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.annotation.MainThread
 import androidx.paging.toLiveData
-import io.github.e_vent.api.RedditApi
+import io.github.e_vent.api.EventApi
 import io.github.e_vent.db.EventDb
 import io.github.e_vent.repo.Listing
 import io.github.e_vent.repo.NetworkState
@@ -20,9 +20,9 @@ import java.util.concurrent.Executor
  * Repository implementation that uses a database PagedList + a boundary callback to return a
  * listing that loads in pages.
  */
-class DbRedditPostRepository(
+class DbEventRepo(
         val db: EventDb,
-        private val redditApi: RedditApi,
+        private val eventApi: EventApi,
         private val ioExecutor: Executor,
         private val networkPageSize: Int = DEFAULT_NETWORK_PAGE_SIZE) : EventPostRepo {
     companion object {
@@ -32,8 +32,8 @@ class DbRedditPostRepository(
     /**
      * Inserts the response into the database while also assigning position indices to items.
      */
-    private fun insertResultIntoDb(body: RedditApi.ListingResponse?) {
-        body!!.data.children.let { posts ->
+    private fun insertResultIntoDb(body: EventApi.ListingResponse?) {
+        body!!.data.let { posts ->
             db.runInTransaction {
                 val start = db.posts().getNextIndex()
                 val items = posts.mapIndexed { index, child ->
@@ -56,16 +56,16 @@ class DbRedditPostRepository(
     private fun refresh(): LiveData<NetworkState> {
         val networkState = MutableLiveData<NetworkState>()
         networkState.value = NetworkState.LOADING
-        redditApi.getTop(networkPageSize).enqueue(
-                object : Callback<RedditApi.ListingResponse> {
-                    override fun onFailure(call: Call<RedditApi.ListingResponse>, t: Throwable) {
+        eventApi.getTop(networkPageSize).enqueue(
+                object : Callback<EventApi.ListingResponse> {
+                    override fun onFailure(call: Call<EventApi.ListingResponse>, t: Throwable) {
                         // retrofit calls this on main thread so safe to call set value
                         networkState.value = NetworkState.error(t.message)
                     }
 
                     override fun onResponse(
-                            call: Call<RedditApi.ListingResponse>,
-                            response: Response<RedditApi.ListingResponse>) {
+                            call: Call<EventApi.ListingResponse>,
+                            response: Response<EventApi.ListingResponse>) {
                         ioExecutor.execute {
                             db.runInTransaction {
                                 db.posts().delete()
@@ -81,14 +81,14 @@ class DbRedditPostRepository(
     }
 
     /**
-     * Returns a Listing for the given subreddit.
+     * Returns a Listing.
      */
     @MainThread
     override fun posts(pageSize: Int): Listing<Event> {
         // create a boundary callback which will observe when the user reaches to the edges of
         // the list and update the database with extra data.
         val boundaryCallback = BoundaryCallback(
-                webservice = redditApi,
+                webservice = eventApi,
                 handleResponse = this::insertResultIntoDb,
                 ioExecutor = ioExecutor,
                 networkPageSize = networkPageSize)
