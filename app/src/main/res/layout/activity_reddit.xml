@@ -24,26 +24,6 @@
     android:orientation="vertical"
     android:id="@+id/root"
     tools:context="io.github.e_vent.ui.RedditActivity">
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:focusedByDefault="false"
-        android:layout_marginTop="8dp"
-        tools:ignore="UnusedAttribute">
-        <EditText
-            android:id="@+id/input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/search_hint"
-            android:imeOptions="actionSearch"
-            android:inputType="textNoSuggestions"
-            tools:text="androiddev"
-            android:text="@string/default_subreddit"
-            tools:ignore="Autofill" />
-    </com.google.android.material.textfield.TextInputLayout>
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipe_refresh"
                                                   android:layout_width="match_parent"
                                                   android:layout_height="match_parent">
