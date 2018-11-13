@@ -31,7 +31,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:focusedByDefault="false"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        tools:ignore="UnusedAttribute">
         <EditText
             android:id="@+id/input"
             android:layout_width="match_parent"
@@ -40,7 +41,8 @@
             android:imeOptions="actionSearch"
             android:inputType="textNoSuggestions"
             tools:text="androiddev"
-            android:text="@string/default_subreddit"/>
+            android:text="@string/default_subreddit"
+            tools:ignore="Autofill" />
     </com.google.android.material.textfield.TextInputLayout>
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipe_refresh"
                                                   android:layout_width="match_parent"
@@ -50,6 +52,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
-            app:layoutManager="LinearLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>
