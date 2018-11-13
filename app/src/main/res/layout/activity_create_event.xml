@@ -37,6 +37,7 @@
                     android:hint="@string/prompt_name"
                     android:inputType="textEmailSubject"
                     android:maxLines="1"
+                    android:text="E-vent Project Meetup"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
@@ -49,6 +50,7 @@
                     android:hint="@string/prompt_desc"
                     android:inputType="textShortMessage"
                     android:maxLines="1"
+                    android:text="Hey y'all! Want to meet up to work on our website? How about SITE 1234 at 1:00 pm on this Sunday (November 11)?"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
             <Button
