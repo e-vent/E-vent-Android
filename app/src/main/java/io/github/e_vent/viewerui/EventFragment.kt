@@ -1,4 +1,4 @@
-package io.github.e_vent.ui
+package io.github.e_vent.viewerui
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle

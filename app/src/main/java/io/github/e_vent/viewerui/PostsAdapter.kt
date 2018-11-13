@@ -1,4 +1,4 @@
-package io.github.e_vent.ui
+package io.github.e_vent.viewerui
 
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil

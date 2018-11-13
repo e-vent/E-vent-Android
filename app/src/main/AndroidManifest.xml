@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,MissingApplicationIcon,UnusedAttribute">
         <activity
-            android:name=".ui.EventActivity"
+            android:name=".viewerui.EventActivity"
             android:theme="@style/AppTheme.NoActionBar"
             />
         <activity android:name=".MainActivity">

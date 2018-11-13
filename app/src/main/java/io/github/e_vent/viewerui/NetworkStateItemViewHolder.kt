@@ -1,4 +1,4 @@
-package io.github.e_vent.ui
+package io.github.e_vent.viewerui
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater

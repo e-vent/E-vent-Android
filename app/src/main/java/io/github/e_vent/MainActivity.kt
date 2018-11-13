@@ -3,7 +3,7 @@ package io.github.e_vent
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import io.github.e_vent.ui.EventActivity
+import io.github.e_vent.viewerui.EventActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
