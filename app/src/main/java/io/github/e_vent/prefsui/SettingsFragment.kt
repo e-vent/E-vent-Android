@@ -9,6 +9,7 @@ import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import io.github.e_vent.R
+import io.github.e_vent.util.getServerAddrPref
 
 
 /*
@@ -29,10 +30,8 @@ class SettingsFragment
         Log.i("Settings", "onResume")
 
         val editText = findPreference("server_addr")
-        editText.summary = preferenceManager.sharedPreferences.getString(
-                getString(R.string.pref_id_server),
-                getString(R.string.pref_default_server)
-        )
+        editText.summary =
+                getServerAddrPref(preferenceManager.sharedPreferences, this.requireActivity())
         oldOnPreferenceChangeListener = editText.onPreferenceChangeListener
         editText.onPreferenceChangeListener = this
     }

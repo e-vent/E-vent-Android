@@ -2,10 +2,13 @@ package io.github.e_vent
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import io.github.e_vent.api.EventRetrofitApi
 import io.github.e_vent.db.EventDb
 import io.github.e_vent.repo.EventPostRepo
 import io.github.e_vent.repo.inDb.DbEventRepo
+import io.github.e_vent.util.getServerAddrPref
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -51,13 +54,24 @@ class DefaultServiceLocator(val app: Application) : ServiceLocator {
     @Suppress("PrivatePropertyName")
     private val NETWORK_IO = Executors.newFixedThreadPool(5)
 
+    private val SP = PreferenceManager.getDefaultSharedPreferences(app)
+    private val PREF_ID_SERVER = app.getString(R.string.pref_id_server)
+    private val SP_LISTENER = { _: SharedPreferences, key: String ->
+        if (key == PREF_ID_SERVER) {
+            refreshEventApi()
+        }
+    }
+
     private val db by lazy {
         EventDb.create(app)
     }
 
     private lateinit var api: EventRetrofitApi
 
+    private var lastServerAddr: String? = null
+
     init {
+        SP.registerOnSharedPreferenceChangeListener(SP_LISTENER)
         refreshEventApi()
     }
 
@@ -75,7 +89,18 @@ class DefaultServiceLocator(val app: Application) : ServiceLocator {
     override fun getEventApi(): EventRetrofitApi = api
 
     override fun refreshEventApi() {
-        //TODO purge the db
-        api = EventRetrofitApi.create("http://192.168.3.150:8000")
+        val newAddr = getServerAddrPref(SP, app)
+        if (newAddr == lastServerAddr) {
+            return
+        }
+        if (lastServerAddr != null) {
+            DISK_IO.execute {
+                db.runInTransaction {
+                    db.posts().delete()
+                }
+            }
+        }
+        api = EventRetrofitApi.create(newAddr)
+        lastServerAddr = newAddr
     }
 }
