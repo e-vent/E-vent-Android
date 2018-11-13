@@ -34,10 +34,9 @@ import java.util.concurrent.Executor
  * The boundary callback might be called multiple times for the same direction so it does its own
  * rate limiting using the PagingRequestHelper class.
  */
-class SubredditBoundaryCallback(
-        private val subredditName: String,
+class BoundaryCallback(
         private val webservice: RedditApi,
-        private val handleResponse: (String, RedditApi.ListingResponse?) -> Unit,
+        private val handleResponse: (RedditApi.ListingResponse?) -> Unit,
         private val ioExecutor: Executor,
         private val networkPageSize: Int)
     : PagedList.BoundaryCallback<RedditPost>() {
@@ -52,7 +51,6 @@ class SubredditBoundaryCallback(
     override fun onZeroItemsLoaded() {
         helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
             webservice.getTop(
-                    subreddit = subredditName,
                     limit = networkPageSize)
                     .enqueue(createWebserviceCallback(it))
         }
@@ -65,7 +63,6 @@ class SubredditBoundaryCallback(
     override fun onItemAtEndLoaded(itemAtEnd: RedditPost) {
         helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
             webservice.getTopAfter(
-                    subreddit = subredditName,
                     after = itemAtEnd.name,
                     limit = networkPageSize)
                     .enqueue(createWebserviceCallback(it))
@@ -80,7 +77,7 @@ class SubredditBoundaryCallback(
             response: Response<RedditApi.ListingResponse>,
             it: PagingRequestHelper.Request.Callback) {
         ioExecutor.execute {
-            handleResponse(subredditName, response.body())
+            handleResponse(response.body())
             it.recordSuccess()
         }
     }

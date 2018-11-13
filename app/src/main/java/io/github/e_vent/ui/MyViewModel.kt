@@ -22,10 +22,10 @@ import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
 import io.github.e_vent.repository.RedditPostRepository
 
-class SubRedditViewModel(private val repository: RedditPostRepository) : ViewModel() {
-    private val subredditName = MutableLiveData<String>()
-    private val repoResult = map(subredditName) {
-        repository.postsOfSubreddit(it, 30)
+class MyViewModel(private val repository: RedditPostRepository) : ViewModel() {
+    private val dummy = MutableLiveData<Void>()
+    private val repoResult = map(dummy) {
+        repository.posts(30)
     }
     val posts = switchMap(repoResult, { it.pagedList })!!
     val networkState = switchMap(repoResult, { it.networkState })!!
@@ -35,18 +35,12 @@ class SubRedditViewModel(private val repository: RedditPostRepository) : ViewMod
         repoResult.value?.refresh?.invoke()
     }
 
-    fun showSubreddit(subreddit: String): Boolean {
-        if (subredditName.value == subreddit) {
-            return false
-        }
-        subredditName.value = subreddit
-        return true
+    fun show() {
+        dummy.value = null
     }
 
     fun retry() {
         val listing = repoResult?.value
         listing?.retry?.invoke()
     }
-
-    fun currentSubreddit(): String? = subredditName.value
 }

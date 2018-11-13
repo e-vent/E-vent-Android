@@ -48,10 +48,10 @@ class DbRedditPostRepository(
     /**
      * Inserts the response into the database while also assigning position indices to items.
      */
-    private fun insertResultIntoDb(subredditName: String, body: RedditApi.ListingResponse?) {
+    private fun insertResultIntoDb(body: RedditApi.ListingResponse?) {
         body!!.data.children.let { posts ->
             db.runInTransaction {
-                val start = db.posts().getNextIndexInSubreddit(subredditName)
+                val start = db.posts().getNextIndex()
                 val items = posts.mapIndexed { index, child ->
                     child.data.indexInResponse = start + index
                     child.data
@@ -69,10 +69,10 @@ class DbRedditPostRepository(
      * updated after the database transaction is finished.
      */
     @MainThread
-    private fun refresh(subredditName: String): LiveData<NetworkState> {
+    private fun refresh(): LiveData<NetworkState> {
         val networkState = MutableLiveData<NetworkState>()
         networkState.value = NetworkState.LOADING
-        redditApi.getTop(subredditName, networkPageSize).enqueue(
+        redditApi.getTop(networkPageSize).enqueue(
                 object : Callback<RedditApi.ListingResponse> {
                     override fun onFailure(call: Call<RedditApi.ListingResponse>, t: Throwable) {
                         // retrofit calls this on main thread so safe to call set value
@@ -84,8 +84,8 @@ class DbRedditPostRepository(
                             response: Response<RedditApi.ListingResponse>) {
                         ioExecutor.execute {
                             db.runInTransaction {
-                                db.posts().deleteBySubreddit(subredditName)
-                                insertResultIntoDb(subredditName, response.body())
+                                db.posts().delete()
+                                insertResultIntoDb(response.body())
                             }
                             // since we are in bg thread now, post the result.
                             networkState.postValue(NetworkState.LOADED)
@@ -100,12 +100,11 @@ class DbRedditPostRepository(
      * Returns a Listing for the given subreddit.
      */
     @MainThread
-    override fun postsOfSubreddit(subReddit: String, pageSize: Int): Listing<RedditPost> {
+    override fun posts(pageSize: Int): Listing<RedditPost> {
         // create a boundary callback which will observe when the user reaches to the edges of
         // the list and update the database with extra data.
-        val boundaryCallback = SubredditBoundaryCallback(
+        val boundaryCallback = BoundaryCallback(
                 webservice = redditApi,
-                subredditName = subReddit,
                 handleResponse = this::insertResultIntoDb,
                 ioExecutor = ioExecutor,
                 networkPageSize = networkPageSize)
@@ -114,11 +113,11 @@ class DbRedditPostRepository(
         // dispatched data in refreshTrigger
         val refreshTrigger = MutableLiveData<Unit>()
         val refreshState = Transformations.switchMap(refreshTrigger) {
-            refresh(subReddit)
+            refresh()
         }
 
         // We use toLiveData Kotlin extension function here, you could also use LivePagedListBuilder
-        val livePagedList = db.posts().postsBySubreddit(subReddit).toLiveData(
+        val livePagedList = db.posts().posts().toLiveData(
                 pageSize = pageSize,
                 boundaryCallback = boundaryCallback)
 

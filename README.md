@@ -54,7 +54,7 @@ in the Paging Library.
 [1]: app/src/main/java/com/android/example/paging/pagingwithnetwork/reddit/repository/inDb/DbRedditPostRepository.kt
 [2]: app/src/main/java/com/android/example/paging/pagingwithnetwork/reddit/repository/inMemory/byItem/InMemoryByItemRepository.kt
 [3]: app/src/main/java/com/android/example/paging/pagingwithnetwork/reddit/db/RedditPostDao.kt
-[4]: app/src/main/java/com/android/example/paging/pagingwithnetwork/reddit/repository/inDb/SubredditBoundaryCallback.kt
+[4]: app/src/main/java/com/android/example/paging/pagingwithnetwork/reddit/repository/inDb/BoundaryCallback.kt
 [5]: app/src/main/java/com/android/example/paging/pagingwithnetwork/reddit/repository/inMemory/byItem/ItemKeyedSubredditDataSource.kt
 [6]: app/src/main/java/com/android/example/paging/pagingwithnetwork/reddit/repository/inMemory/byPage/InMemoryByPageKeyRepository.kt
 [7]: app/src/main/java/com/android/example/paging/pagingwithnetwork/reddit/repository/inMemory/byPage/PageKeyedSubredditDataSource.kt

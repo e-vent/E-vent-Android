@@ -25,12 +25,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.view.KeyEvent
-import android.view.inputmethod.EditorInfo
 import io.github.e_vent.R
 import io.github.e_vent.ServiceLocator
 import io.github.e_vent.repository.NetworkState
-import io.github.e_vent.repository.RedditPostRepository
 import io.github.e_vent.vo.RedditPost
 import kotlinx.android.synthetic.main.activity_reddit.*
 
@@ -41,15 +38,13 @@ import kotlinx.android.synthetic.main.activity_reddit.*
  */
 class RedditActivity : AppCompatActivity() {
     companion object {
-        const val KEY_SUBREDDIT = "subreddit"
-        const val DEFAULT_SUBREDDIT = "androiddev"
         fun intentFor(context: Context): Intent {
             val intent = Intent(context, RedditActivity::class.java)
             return intent
         }
     }
 
-    private lateinit var model: SubRedditViewModel
+    private lateinit var model: MyViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,20 +52,18 @@ class RedditActivity : AppCompatActivity() {
         model = getViewModel()
         initAdapter()
         initSwipeToRefresh()
-        initSearch()
-        val subreddit = savedInstanceState?.getString(KEY_SUBREDDIT) ?: DEFAULT_SUBREDDIT
-        model.showSubreddit(subreddit)
+        model.show()
     }
 
-    private fun getViewModel(): SubRedditViewModel {
+    private fun getViewModel(): MyViewModel {
         return ViewModelProviders.of(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 val repo = ServiceLocator.instance(this@RedditActivity)
                         .getRepository()
                 @Suppress("UNCHECKED_CAST")
-                return SubRedditViewModel(repo) as T
+                return MyViewModel(repo) as T
             }
-        })[SubRedditViewModel::class.java]
+        })[MyViewModel::class.java]
     }
 
     private fun initAdapter() {
@@ -92,41 +85,6 @@ class RedditActivity : AppCompatActivity() {
         })
         swipe_refresh.setOnRefreshListener {
             model.refresh()
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(KEY_SUBREDDIT, model.currentSubreddit())
-    }
-
-    private fun initSearch() {
-        input.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_GO) {
-                updatedSubredditFromInput()
-                true
-            } else {
-                false
-            }
-        }
-        input.setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                updatedSubredditFromInput()
-                true
-            } else {
-                false
-            }
-        }
-    }
-
-    private fun updatedSubredditFromInput() {
-        input.text.trim().toString().let {
-            if (it.isNotEmpty()) {
-                if (model.showSubreddit(it)) {
-                    list.scrollToPosition(0)
-                    (list.adapter as? PostsAdapter)?.submitList(null)
-                }
-            }
         }
     }
 }

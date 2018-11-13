@@ -32,23 +32,15 @@ import retrofit2.http.Query
  * API communication setup
  */
 interface RedditApi {
-    @GET("/r/{subreddit}/hot.json")
+    @GET("/r/androiddev/hot.json")
     fun getTop(
-            @Path("subreddit") subreddit: String,
             @Query("limit") limit: Int): Call<ListingResponse>
 
     // for after/before param, either get from RedditDataResponse.after/before,
     // or pass RedditNewsDataResponse.name (though this is technically incorrect)
-    @GET("/r/{subreddit}/hot.json")
+    @GET("/r/androiddev/hot.json")
     fun getTopAfter(
-            @Path("subreddit") subreddit: String,
             @Query("after") after: String,
-            @Query("limit") limit: Int): Call<ListingResponse>
-
-    @GET("/r/{subreddit}/hot.json")
-    fun getTopBefore(
-            @Path("subreddit") subreddit: String,
-            @Query("before") before: String,
             @Query("limit") limit: Int): Call<ListingResponse>
 
     class ListingResponse(val data: ListingData)

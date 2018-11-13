@@ -24,5 +24,5 @@ import io.github.e_vent.vo.RedditPost
  * network+db, or network-only
  */
 interface RedditPostRepository {
-    fun postsOfSubreddit(subReddit: String, pageSize: Int): Listing<RedditPost>
+    fun posts(pageSize: Int): Listing<RedditPost>
 }
