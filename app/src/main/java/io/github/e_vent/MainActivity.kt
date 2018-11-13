@@ -18,7 +18,6 @@ package io.github.e_vent
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import io.github.e_vent.repository.RedditPostRepository
 import io.github.e_vent.ui.RedditActivity
 import kotlinx.android.synthetic.main.activity_main.*
 

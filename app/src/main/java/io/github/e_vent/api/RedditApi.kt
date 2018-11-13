@@ -46,9 +46,7 @@ interface RedditApi {
     class ListingResponse(val data: ListingData)
 
     class ListingData(
-            val children: List<RedditChildrenResponse>,
-            val after: String?,
-            val before: String?
+            val children: List<RedditChildrenResponse>
     )
 
     data class RedditChildrenResponse(val data: RedditPost)
