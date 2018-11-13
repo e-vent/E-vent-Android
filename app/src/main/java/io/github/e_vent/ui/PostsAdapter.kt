@@ -6,14 +6,14 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import io.github.e_vent.R
 import io.github.e_vent.repo.NetworkState
-import io.github.e_vent.vo.Event
+import io.github.e_vent.vo.ClientEvent
 
 /**
  * A simple adapter implementation that shows posts.
  */
 class PostsAdapter(
         private val retryCallback: () -> Unit)
-    : PagedListAdapter<Event, RecyclerView.ViewHolder>(POST_COMPARATOR) {
+    : PagedListAdapter<ClientEvent, RecyclerView.ViewHolder>(POST_COMPARATOR) {
     private var networkState: NetworkState? = null
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
@@ -29,7 +29,7 @@ class PostsAdapter(
             payloads: MutableList<Any>) {
         if (payloads.isNotEmpty()) {
             val item = getItem(position)
-            (holder as EventViewHolder).updateScore(item)
+            (holder as EventViewHolder).update(item)
         } else {
             onBindViewHolder(holder, position)
         }
@@ -74,14 +74,14 @@ class PostsAdapter(
     }
 
     companion object {
-        val POST_COMPARATOR = object : DiffUtil.ItemCallback<Event>() {
-            override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean =
+        val POST_COMPARATOR = object : DiffUtil.ItemCallback<ClientEvent>() {
+            override fun areContentsTheSame(oldItem: ClientEvent, newItem: ClientEvent): Boolean =
                     oldItem == newItem
 
-            override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean =
+            override fun areItemsTheSame(oldItem: ClientEvent, newItem: ClientEvent): Boolean =
                     oldItem.name == newItem.name
 
-            override fun getChangePayload(oldItem: Event, newItem: Event): Any? = null
+            override fun getChangePayload(oldItem: ClientEvent, newItem: ClientEvent): Any? = null
         }
     }
 }

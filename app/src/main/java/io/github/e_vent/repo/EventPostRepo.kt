@@ -1,6 +1,6 @@
 package io.github.e_vent.repo
 
-import io.github.e_vent.vo.Event
+import io.github.e_vent.vo.ClientEvent
 
 /**
  * Common interface shared by the different repository implementations.
@@ -8,5 +8,5 @@ import io.github.e_vent.vo.Event
  * network+db, or network-only
  */
 interface EventPostRepo {
-    fun posts(pageSize: Int): Listing<Event>
+    fun posts(pageSize: Int): Listing<ClientEvent>
 }

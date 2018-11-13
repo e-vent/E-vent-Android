@@ -4,13 +4,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import android.content.Context
-import io.github.e_vent.vo.Event
+import io.github.e_vent.vo.ClientEvent
 
 /**
  * Database schema used by the DbEventRepo
  */
 @Database(
-        entities = arrayOf(Event::class),
+        entities = arrayOf(ClientEvent::class),
         version = 1,
         exportSchema = false
 )

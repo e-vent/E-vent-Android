@@ -2,7 +2,7 @@ package io.github.e_vent
 
 import android.app.Application
 import android.content.Context
-import io.github.e_vent.api.EventApi
+import io.github.e_vent.api.EventRetrofitApi
 import io.github.e_vent.db.EventDb
 import io.github.e_vent.repo.EventPostRepo
 import io.github.e_vent.repo.inDb.DbEventRepo
@@ -35,7 +35,7 @@ interface ServiceLocator {
 
     fun getDiskIOExecutor(): Executor
 
-    fun getEventApi(): EventApi
+    fun getEventApi(): EventRetrofitApi
 }
 
 /**
@@ -55,7 +55,7 @@ open class DefaultServiceLocator(val app: Application, val useInMemoryDb: Boolea
     }
 
     private val api by lazy {
-        EventApi.create()
+        EventRetrofitApi.create()
     }
 
     override fun getRepository(): EventPostRepo {
@@ -69,5 +69,5 @@ open class DefaultServiceLocator(val app: Application, val useInMemoryDb: Boolea
 
     override fun getDiskIOExecutor(): Executor = DISK_IO
 
-    override fun getEventApi(): EventApi = api
+    override fun getEventApi(): EventRetrofitApi = api
 }

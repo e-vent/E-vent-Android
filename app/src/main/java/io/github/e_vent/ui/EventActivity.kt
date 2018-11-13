@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.e_vent.R
 import io.github.e_vent.ServiceLocator
 import io.github.e_vent.repo.NetworkState
-import io.github.e_vent.vo.Event
+import io.github.e_vent.vo.ClientEvent
 import kotlinx.android.synthetic.main.activity_event.*
 
 /**
@@ -55,7 +55,7 @@ class EventActivity : AppCompatActivity() {
             model.retry()
         }
         list.adapter = adapter
-        model.posts.observe(this, Observer<PagedList<Event>> {
+        model.posts.observe(this, Observer<PagedList<ClientEvent>> {
             adapter.submitList(it)
         })
         model.networkState.observe(this, Observer {

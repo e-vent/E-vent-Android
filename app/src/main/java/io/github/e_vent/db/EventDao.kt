@@ -5,19 +5,16 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import io.github.e_vent.vo.Event
+import io.github.e_vent.vo.ClientEvent
 
 @Dao
 interface EventDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(posts : List<Event>)
+    fun insert(posts : List<ClientEvent>)
 
-    @Query("SELECT * FROM posts ORDER BY indexInResponse ASC")
-    fun posts() : DataSource.Factory<Int, Event>
+    @Query("SELECT * FROM events ORDER BY id ASC")
+    fun posts() : DataSource.Factory<Int, ClientEvent>
 
-    @Query("DELETE FROM posts")
+    @Query("DELETE FROM events")
     fun delete()
-
-    @Query("SELECT MAX(indexInResponse) + 1 FROM posts")
-    fun getNextIndex() : Int
 }

@@ -3,11 +3,9 @@ package io.github.e_vent.repo.inDb
 import androidx.paging.PagedList
 import androidx.paging.PagingRequestHelper
 import androidx.annotation.MainThread
-import io.github.e_vent.api.EventApi
+import io.github.e_vent.api.*
 import io.github.e_vent.util.createStatusLiveData
-import io.github.e_vent.vo.Event
-import retrofit2.Call
-import retrofit2.Callback
+import io.github.e_vent.vo.ClientEvent
 import retrofit2.Response
 import java.util.concurrent.Executor
 
@@ -19,11 +17,10 @@ import java.util.concurrent.Executor
  * rate limiting using the PagingRequestHelper class.
  */
 class BoundaryCallback(
-        private val webservice: EventApi,
-        private val handleResponse: (EventApi.ListingResponse?) -> Unit,
-        private val ioExecutor: Executor,
-        private val networkPageSize: Int)
-    : PagedList.BoundaryCallback<Event>() {
+        private val webservice: EventRetrofitApi,
+        private val handleResponse: (ListingResponse?) -> Unit,
+        private val ioExecutor: Executor)
+    : PagedList.BoundaryCallback<ClientEvent>() {
 
     val helper = PagingRequestHelper(ioExecutor)
     val networkState = helper.createStatusLiveData()
@@ -34,9 +31,7 @@ class BoundaryCallback(
     @MainThread
     override fun onZeroItemsLoaded() {
         helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
-            webservice.getTop(
-                    limit = networkPageSize)
-                    .enqueue(createWebserviceCallback(it))
+            doGetEvents(webservice, createWebserviceCallback(it))
         }
     }
 
@@ -44,12 +39,9 @@ class BoundaryCallback(
      * User reached to the end of the list.
      */
     @MainThread
-    override fun onItemAtEndLoaded(itemAtEnd: Event) {
+    override fun onItemAtEndLoaded(itemAtEnd: ClientEvent) {
         helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
-            webservice.getTopAfter(
-                    after = itemAtEnd.name,
-                    limit = networkPageSize)
-                    .enqueue(createWebserviceCallback(it))
+            doGetEvents(webservice, createWebserviceCallback(it), after = itemAtEnd.id + 1)
         }
     }
 
@@ -58,7 +50,7 @@ class BoundaryCallback(
      * paging library takes care of refreshing the list if necessary.
      */
     private fun insertItemsIntoDb(
-            response: Response<EventApi.ListingResponse>,
+            response: Response<ListingResponse>,
             it: PagingRequestHelper.Request.Callback) {
         ioExecutor.execute {
             handleResponse(response.body())
@@ -66,22 +58,18 @@ class BoundaryCallback(
         }
     }
 
-    override fun onItemAtFrontLoaded(itemAtFront: Event) {
+    override fun onItemAtFrontLoaded(itemAtFront: ClientEvent) {
         // ignored, since we only ever append to what's in the DB
     }
 
     private fun createWebserviceCallback(it: PagingRequestHelper.Request.Callback)
-            : Callback<EventApi.ListingResponse> {
-        return object : Callback<EventApi.ListingResponse> {
-            override fun onFailure(
-                    call: Call<EventApi.ListingResponse>,
-                    t: Throwable) {
+            : CallbackLite<ListingResponse> {
+        return object : CallbackLite<ListingResponse> {
+            override fun onFailure(t: Throwable) {
                 it.recordFailure(t)
             }
 
-            override fun onResponse(
-                    call: Call<EventApi.ListingResponse>,
-                    response: Response<EventApi.ListingResponse>) {
+            override fun onResponse(response: Response<ListingResponse>) {
                 insertItemsIntoDb(response, it)
             }
         }

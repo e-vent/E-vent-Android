@@ -5,14 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.annotation.MainThread
 import androidx.paging.toLiveData
-import io.github.e_vent.api.EventApi
+import io.github.e_vent.api.CallbackLite
+import io.github.e_vent.api.EventRetrofitApi
+import io.github.e_vent.api.ListingResponse
+import io.github.e_vent.api.doGetEvents
 import io.github.e_vent.db.EventDb
 import io.github.e_vent.repo.Listing
 import io.github.e_vent.repo.NetworkState
 import io.github.e_vent.repo.EventPostRepo
-import io.github.e_vent.vo.Event
-import retrofit2.Call
-import retrofit2.Callback
+import io.github.e_vent.vo.ClientEvent
 import retrofit2.Response
 import java.util.concurrent.Executor
 
@@ -22,25 +23,16 @@ import java.util.concurrent.Executor
  */
 class DbEventRepo(
         val db: EventDb,
-        private val eventApi: EventApi,
-        private val ioExecutor: Executor,
-        private val networkPageSize: Int = DEFAULT_NETWORK_PAGE_SIZE) : EventPostRepo {
-    companion object {
-        private const val DEFAULT_NETWORK_PAGE_SIZE = 10
-    }
+        private val eventApi: EventRetrofitApi,
+        private val ioExecutor: Executor) : EventPostRepo {
 
     /**
      * Inserts the response into the database while also assigning position indices to items.
      */
-    private fun insertResultIntoDb(body: EventApi.ListingResponse?) {
+    private fun insertResultIntoDb(body: ListingResponse?) {
         body!!.data.let { posts ->
             db.runInTransaction {
-                val start = db.posts().getNextIndex()
-                val items = posts.mapIndexed { index, child ->
-                    child.data.indexInResponse = start + index
-                    child.data
-                }
-                db.posts().insert(items)
+                db.posts().insert(posts)
             }
         }
     }
@@ -56,16 +48,15 @@ class DbEventRepo(
     private fun refresh(): LiveData<NetworkState> {
         val networkState = MutableLiveData<NetworkState>()
         networkState.value = NetworkState.LOADING
-        eventApi.getTop(networkPageSize).enqueue(
-                object : Callback<EventApi.ListingResponse> {
-                    override fun onFailure(call: Call<EventApi.ListingResponse>, t: Throwable) {
+        doGetEvents(eventApi,
+                object : CallbackLite<ListingResponse> {
+                    override fun onFailure(t: Throwable) {
                         // retrofit calls this on main thread so safe to call set value
                         networkState.value = NetworkState.error(t.message)
                     }
 
                     override fun onResponse(
-                            call: Call<EventApi.ListingResponse>,
-                            response: Response<EventApi.ListingResponse>) {
+                            response: Response<ListingResponse>) {
                         ioExecutor.execute {
                             db.runInTransaction {
                                 db.posts().delete()
@@ -84,14 +75,13 @@ class DbEventRepo(
      * Returns a Listing.
      */
     @MainThread
-    override fun posts(pageSize: Int): Listing<Event> {
+    override fun posts(pageSize: Int): Listing<ClientEvent> {
         // create a boundary callback which will observe when the user reaches to the edges of
         // the list and update the database with extra data.
         val boundaryCallback = BoundaryCallback(
                 webservice = eventApi,
                 handleResponse = this::insertResultIntoDb,
-                ioExecutor = ioExecutor,
-                networkPageSize = networkPageSize)
+                ioExecutor = ioExecutor)
         // we are using a mutable live data to trigger refresh requests which eventually calls
         // refresh method and gets a new live data. Each refresh request by the user becomes a newly
         // dispatched data in refreshTrigger
