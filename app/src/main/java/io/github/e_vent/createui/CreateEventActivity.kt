@@ -89,7 +89,7 @@ class CreateEventActivity : AppCompatActivity() {
 
     private fun isNameValid(name: String): Boolean {
         val l = name.length
-        return 0 < l && l < 20 && isValidEventStr(name)
+        return 0 < l && l < 50 && isValidEventStr(name)
     }
 
     private fun isDescValid(desc: String): Boolean {
