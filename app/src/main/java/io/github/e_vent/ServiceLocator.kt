@@ -8,6 +8,7 @@ import io.github.e_vent.api.EventRetrofitApi
 import io.github.e_vent.db.EventDb
 import io.github.e_vent.repo.EventPostRepo
 import io.github.e_vent.repo.inDb.DbEventRepo
+import io.github.e_vent.util.getClientEventValidationPref
 import io.github.e_vent.util.getServerAddrPref
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -20,11 +21,11 @@ interface ServiceLocator {
     companion object {
         private val LOCK = Any()
         private var instance: ServiceLocator? = null
-        fun instance(context: Context): ServiceLocator {
+        fun instance(context: Context?): ServiceLocator {
             synchronized(LOCK) {
                 if (instance == null) {
                     instance = DefaultServiceLocator(
-                            app = context.applicationContext as Application)
+                            app = context!!.applicationContext as Application)
                 }
                 return instance!!
             }

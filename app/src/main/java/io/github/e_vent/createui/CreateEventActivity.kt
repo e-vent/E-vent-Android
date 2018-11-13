@@ -6,10 +6,12 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.AsyncTask
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import io.github.e_vent.R
 import io.github.e_vent.ServiceLocator
+import io.github.e_vent.util.getClientEventValidationPref
 import io.github.e_vent.util.isValidEventStr
 import io.github.e_vent.vo.ServerEvent
 
@@ -55,18 +57,21 @@ class CreateEventActivity : AppCompatActivity() {
         var cancel = false
         var focusView: View? = null
 
-        // Check for a valid desc
-        if (!isDescValid(descStr)) {
-            desc.error = getString(R.string.error_invalid_desc)
-            focusView = desc
-            cancel = true
-        }
+        if (getClientEventValidationPref(
+                        PreferenceManager.getDefaultSharedPreferences(this), this)) {
+            // Check for a valid desc
+            if (!isDescValid(descStr)) {
+                desc.error = getString(R.string.error_invalid_desc)
+                focusView = desc
+                cancel = true
+            }
 
-        // Check for a valid name
-        if (!isNameValid(nameStr)) {
-            name.error = getString(R.string.error_invalid_name)
-            focusView = name
-            cancel = true
+            // Check for a valid name
+            if (!isNameValid(nameStr)) {
+                name.error = getString(R.string.error_invalid_name)
+                focusView = name
+                cancel = true
+            }
         }
 
         if (cancel) {

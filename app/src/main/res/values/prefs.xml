@@ -1,0 +1,9 @@
+<resources>
+    <string name="pref_header_general">General</string>
+    <string name="pref_title_validate_events_on_client">Validate Events before Submitting</string>
+    <bool name="pref_default_validate_events_on_client">true</bool>
+    <string name="pref_id_validate_events_on_client" translatable="false">validate_events_on_client</string>
+    <string name="pref_title_server">Server URL</string>
+    <string name="pref_default_server">http://192.168.3.150:8000</string>
+    <string name="pref_id_server" translatable="false">server_addr</string>
+</resources>
