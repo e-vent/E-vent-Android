@@ -4,6 +4,6 @@
     <bool name="pref_default_validate_events_on_client">true</bool>
     <string name="pref_id_validate_events_on_client" translatable="false">validate_events_on_client</string>
     <string name="pref_title_server">Server URL</string>
-    <string name="pref_default_server">https://danielzgtg.duckdns.org</string>
+    <string name="pref_default_server">https://example.com</string>
     <string name="pref_id_server" translatable="false">server_addr</string>
 </resources>
